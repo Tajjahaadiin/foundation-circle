@@ -3,6 +3,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 export default function Root() {
   return <Outlet />;
 }
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
