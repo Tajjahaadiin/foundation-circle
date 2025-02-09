@@ -1,16 +1,9 @@
 {
   "compilerOptions": {
     "rootDirs": [".", "./.react-router/types"],
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
-      "@assets": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@features": ["features/*"],
-      "@hooks": ["hooks/*"],
-      "@layouts": ["layouts/*"],
-      "@routes": ["routes/*"],
-      "@utils/*": ["utils/*"]
+      "@/*": ["./src/*"]
     },
 
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
