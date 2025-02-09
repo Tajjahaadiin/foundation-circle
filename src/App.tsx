@@ -1,10 +1,10 @@
-import { Button } from '@/components/Button/Button';
+import { Button } from '@components/Button/Button';
 
 function App() {
   return (
-    <div>
+    <>
       <Button label="Click me" onClick={() => {}} />
-    </div>
+    </>
   );
 }
 
