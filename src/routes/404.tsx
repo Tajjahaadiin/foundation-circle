@@ -1,7 +1,8 @@
 import errorImage from '@/assets/404.svg';
+import { Box, Text } from '@chakra-ui/react';
 export default function ErrorRoute() {
   return (
-    <div
+    <Box
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -14,8 +15,10 @@ export default function ErrorRoute() {
         gap: '50px',
       }}
     >
-      <img width={'50%'} src={errorImage} alt="error Image" style={{}} />
-      <h1 style={{ textAlign: 'center' }}>Page not found</h1>
-    </div>
+      <img width={'50%'} src={errorImage} alt="error Image" />
+      <Text style={{ textAlign: 'center', color: 'black', fontSize: '20px' }}>
+        Page not found
+      </Text>
+    </Box>
   );
 }

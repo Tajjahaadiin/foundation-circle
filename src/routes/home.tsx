@@ -1,3 +1,12 @@
+import { HStack, Button } from '@chakra-ui/react';
 export default function Home() {
-  return <h1>Home</h1>;
+  return (
+    <HStack>
+      <Button bg="brand.contrast" color="brand.solid">
+        Clickme
+      </Button>
+      <Button>Clickme</Button>
+      <Button>Clickme</Button>
+    </HStack>
+  );
 }

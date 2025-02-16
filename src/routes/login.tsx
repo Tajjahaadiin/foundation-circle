@@ -1,3 +1,4 @@
-export default function Login() {
-  return <h1>Login Page</h1>;
+import LoginForm from '@/features/auth/components/login-form';
+export default function LoginRoute() {
+  return <LoginForm />;
 }
