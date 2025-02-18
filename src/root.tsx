@@ -1,4 +1,5 @@
 import { Provider } from '@/components/ui/provider';
+import { Toaster } from '@/components/ui/toaster';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 // import globalCss from '@/styles/global.css?url';
 
@@ -7,6 +8,7 @@ export default function Root() {
     <>
       <Provider>
         <Outlet />
+        <Toaster />
       </Provider>
     </>
   );

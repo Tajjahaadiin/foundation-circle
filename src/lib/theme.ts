@@ -45,6 +45,7 @@ export const system = createSystem(defaultConfig, {
 export const floatingStyles = defineStyle({
   pos: 'absolute',
   bg: 'bgSite.solid',
+
   px: '0.5',
   top: '-3',
   insetStart: '2',
