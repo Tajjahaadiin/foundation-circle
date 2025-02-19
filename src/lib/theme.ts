@@ -14,6 +14,12 @@ export const system = createSystem(defaultConfig, {
         bgSite: {
           50: { value: '#1D1D1D' },
         },
+        card: { value: '#262626' },
+        border: { value: '#3F3F3F' },
+        text: {
+          50: { value: '#909090' },
+          100: { value: '#FFF' },
+        },
       },
     },
     semanticTokens: {
@@ -26,6 +32,10 @@ export const system = createSystem(defaultConfig, {
           subtle: { value: '{colors.brand.200}' },
           emphasized: { value: '{colors.brand.300}' },
           focusRing: { value: '{colors.brand.500}' },
+        },
+        text: {
+          light: { value: '{colors.text.50}' },
+          solid: { value: '{colors.text}.100' },
         },
         bgSite: {
           solid: { value: '{colors.bgSite.50}' },

@@ -1,3 +1,9 @@
+import { Box } from '@chakra-ui/react';
+
 export default function Home() {
-  return <h1>Homepage</h1>;
+  return (
+    <Box minH={'dvh'}>
+      <h1>Homepage</h1>
+    </Box>
+  );
 }
