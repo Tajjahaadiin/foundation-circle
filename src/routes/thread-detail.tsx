@@ -1,5 +1,5 @@
 import { Box, Button, Image, Text } from '@chakra-ui/react';
-// import ThreadDetail from '@/features/thread-detail/components/thread-detail';
+import ThreadDetail from '@/features/thread-detail/components/thread-detail';
 import { arrowLeftLogo } from '@/assets/icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ export default function ThreadDetailPage() {
         </Button>
         <Text fontSize={'2xl'}>Status</Text>
       </Box>
-      {/* <ThreadDetail /> */}
+      <ThreadDetail />
     </Box>
   );
 }

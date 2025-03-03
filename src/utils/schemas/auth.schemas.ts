@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 export const registerSchema = z.object({
-  fullName: z.string().min(4),
-  userName: z.string().min(4),
+  fullName: z.string().min(4).max(100),
+  username: z.string().min(4).max(12),
   email: z.string().email(),
-  password: z.string().min(4),
+  password: z.string().min(8),
 });
 export type RegisterSchemaDTO = z.infer<typeof registerSchema>;
 
@@ -36,7 +36,7 @@ export const loginSchema = z.object({
         message: 'Invalid email format or username too short', // Generic error message, refine as needed
       }
     ),
-  password: z.string().min(4),
+  password: z.string().min(8),
 });
 export type LoginSchemaDTO = z.infer<typeof loginSchema>;
 export const forgotPasswordSchema = z.object({
@@ -45,13 +45,9 @@ export const forgotPasswordSchema = z.object({
 
 export type ForgotPasswordSchemaDTO = z.infer<typeof forgotPasswordSchema>;
 
-export const resetPasswordSchema = z
-  .object({
-    password: z.string().min(4),
-    confirmPassword: z.string().min(4),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match!",
-    path: ['password'],
-  });
+export const resetPasswordSchema = z.object({
+  newPassword: z.string().min(8),
+  confirmPassword: z.string().min(8),
+});
+
 export type ResetPasswordSchemaDTO = z.infer<typeof resetPasswordSchema>;

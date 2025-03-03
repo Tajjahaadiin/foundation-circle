@@ -1,28 +1,118 @@
+import { logoutLogo } from '@/assets/icons';
+import brandLogo from '@/assets/logo.svg';
+import { NAV_LINK_MENU } from '@/utils/constants/nav-link-menu';
 import {
   Box,
-  Grid,
-  GridItem,
-  Link as ChakraLink,
-  Text,
-  Image,
   Button,
+  Link as ChakraLink,
   Flex,
   Float,
+  Grid,
+  GridItem,
+  Image,
+  Spinner,
+  Text,
 } from '@chakra-ui/react';
+import {
+  Navigate,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { Avatar } from '../ui/avatar';
-import { Outlet, useLocation, NavLink } from 'react-router-dom';
-import { NAV_LINK_MENU } from '@/utils/constants/nav-link-menu';
-import brandLogo from '@/assets/logo.svg';
-import { logoutLogo } from '@/assets/icons';
+import MyBrandBtn from '../ui/brand-button';
+import { useAuthStore } from '@/stores/authStore';
+import Cookies from 'js-cookie';
+import { api } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query';
+
 export default function Applayout() {
+  const {
+    user: user,
+    setUser,
+    logout,
+    startLoading,
+    stopLoading,
+  } = useAuthStore();
+
+  const { isLoading, isError } = useQuery({
+    queryKey: ['check-auth'],
+    queryFn: async () => {
+      try {
+        startLoading();
+        const token = Cookies.get('token');
+        const response = await api.post(
+          '/auth/check',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUser(response.data.data);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        Cookies.remove('token');
+        logout();
+        throw error;
+      } finally {
+        stopLoading();
+      }
+    },
+  });
+  if (isLoading) {
+    // Show loading spinner while checking auth
+    return (
+      <Flex justify="center" align="center" height="100vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
+  if (isError) {
+    return <Navigate to="/login" />;
+  }
+  console.log('this is user: ', user);
+
+  if (!user) {
+    console.log('something went wrong, navigate to login');
+    return <Navigate to={'/login'} />;
+  }
+
+  // if (isFetched) {
+  //   console.log('usernameisnotFetched', username);
+  //   if (!username) return <Navigate to={'/login'} />;
+  //   console.log('usernameisFetched', username);
+  //   return (
+  //     <Grid templateColumns={'repeat(4,1fr)'}>
+  //       <GridItem colSpan={1}>
+  //         <SidebarLeft />
+  //       </GridItem>
+  //       <GridItem
+  //         minHeight={'dvh'}
+  //         colSpan={{ base: 4, lg: 2 }}
+  //         borderX={'1px solid'}
+  //         borderColor={'border'}
+  //       >
+  //         <Outlet />
+  //       </GridItem>
+  //       <GridItem colSpan={1}>
+  //         <SidebarRight />
+  //       </GridItem>
+  //     </Grid>
+  //   );
+  // }
   return (
     <Grid templateColumns={'repeat(4,1fr)'}>
       <GridItem colSpan={1}>
         <SidebarLeft />
       </GridItem>
       <GridItem
+        minHeight={'dvh'}
         colSpan={{ base: 4, lg: 2 }}
-        padding={'40px'}
         borderX={'1px solid'}
         borderColor={'border'}
       >
@@ -36,8 +126,13 @@ export default function Applayout() {
 }
 export function SidebarLeft() {
   const { pathname } = useLocation();
-  function Callalert() {
-    alert('test');
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  function onLogout() {
+    logout();
+    Cookies.remove('token');
+    navigate('/login');
   }
   return (
     <Grid templateRows="repeat(6, 1fr)" h={'dvh'} position={'sticky'} top={'0'}>
@@ -73,15 +168,9 @@ export function SidebarLeft() {
               </ChakraLink>
             </Flex>
           ))}
-          <Button
-            mx={'5'}
-            bg={'brand.solid'}
-            rounded={'2xl'}
-            w={{ base: '300px' }}
-            color={'#fff'}
-          >
+          <MyBrandBtn mx={'5'} key="1">
             create post
-          </Button>
+          </MyBrandBtn>
         </Flex>
       </GridItem>
       <GridItem rowSpan={1} className="nav-bottom">
@@ -91,12 +180,13 @@ export function SidebarLeft() {
             rounded={'2xl'}
             w={{ base: '300px' }}
             color={'#fff'}
-            onClick={Callalert}
+            onClick={onLogout}
+            justifyContent={'start'}
           >
             <Box
               display={'flex'}
               gapX={5}
-              justifyContent={'center'}
+              justifyContent={'start'}
               alignItems={'center'}
             >
               <Image src={logoutLogo} width={'30%'}></Image>
@@ -109,6 +199,8 @@ export function SidebarLeft() {
   );
 }
 export function SidebarRight() {
+  const user = useAuthStore((state) => state.user);
+
   return (
     <Grid
       templateRows={'repeat(7,82px)'}
@@ -126,19 +218,23 @@ export function SidebarRight() {
         p={'3'}
       >
         <Flex flexDir={'column'} h={'full'}>
-          <Text>My profile</Text>
+          <Text>My Profile</Text>
           <Flex flexDir={'column'}>
             <Box
               position="relative"
               h={'12vh'}
               w={'full'}
-              backgroundImage={`url('https://api.dicebear.com/9.x/glass/svg?seed=tono')`}
+              bgImage={`url("https://api.dicebear.com/9.x/glass/svg?seed=${user?.profile?.fullName}")`}
               alignSelf={'center'}
               rounded={'lg'}
             >
               <Float placement={'bottom-start'} offsetX="10">
                 <Avatar
-                  src="https://api.dicebear.com/9.x/big-smile/svg?seed=Jhon%Doe"
+                  name={user?.profile?.fullName || ''}
+                  src={
+                    user?.profile?.avatarUrl ||
+                    `https://api.dicebear.com/9.x/big-smile/svg?seed=${user?.profile?.fullName || ''}`
+                  }
                   size={'xl'}
                 />
               </Float>
@@ -155,22 +251,22 @@ export function SidebarRight() {
               rounded={'full'}
               alignItems={'center'}
             >
-              edit profile
+              Edit Profile
             </Button>
           </Flex>
 
           <Flex flexDir={'column'} gap={'1'}>
-            <Text textStyle={'md'}>✨Jhon Doe✨</Text>
+            <Text textStyle={'md'}>✨{user?.profile?.fullName || ''}✨</Text>
             <Text textStyle={'xs'} color={'text.light'}>
-              @Jhondoe
+              @ {user?.username || ''}
             </Text>
-            <Text textStyle={'sm'}>I believe i can fly</Text>
+            <Text textStyle={'sm'}>{user?.profile?.bio}</Text>
             <Flex gap={'2'} textStyle={'sm'} w={'full'}>
               <Text textStyle={'sm'} color={'text.light'}>
-                234 Followers
+                200 Followers
               </Text>
               <Text textStyle={'sm'} color={'text.light'}>
-                276 Following
+                100 Following
               </Text>
             </Flex>
           </Flex>

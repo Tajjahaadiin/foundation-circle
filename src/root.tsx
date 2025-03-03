@@ -1,15 +1,22 @@
 import { Provider } from '@/components/ui/provider';
 import { Toaster } from '@/components/ui/toaster';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 // import globalCss from '@/styles/global.css?url';
-
+const queryClient = new QueryClient();
 export default function Root() {
   return (
     <>
-      <Provider>
-        <Outlet />
-        <Toaster />
-      </Provider>
+      {
+        <QueryClientProvider client={queryClient}>
+          <Provider>
+            <Outlet />
+            <Toaster />
+          </Provider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      }
     </>
   );
 }

@@ -1,66 +1,21 @@
-import {
-  Box,
-  Field,
-  Input,
-  Stack,
-  HStack,
-  Button,
-  Image,
-  Text,
-  FieldErrorText,
-} from '@chakra-ui/react';
-import { Form, Link } from 'react-router';
 import circleLogo from '@/assets/logo.svg';
 import { floatingStyles } from '@/lib/theme';
-import { loginSchema, LoginSchemaDTO } from '@/utils/schemas/auth-schemas';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toaster } from '@/components/ui/toaster';
-import { useNavigate } from 'react-router-dom';
-import { userDatas } from '@/utils/datas/user';
+import {
+  Box,
+  Button,
+  Field,
+  FieldErrorText,
+  HStack,
+  Image,
+  Input,
+  Spinner,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
+import { Form, Link } from 'react-router-dom';
+import { useLoginForm } from '../hooks/use-login';
 export default function LoginForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm<LoginSchemaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(loginSchema),
-  });
-  const navigate = useNavigate();
-  const onSubmit = (data: LoginSchemaDTO) => {
-    const user = userDatas.some((data) =>
-      watch('loginId').includes('@')
-        ? data.email === watch('loginId')
-        : data.username === watch('loginId')
-    );
-    console.log('thi is input ', watch('loginId'));
-    console.log('thi is user ', user);
-    const promise = new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        if (!user) {
-          reject();
-        } else {
-          resolve();
-        }
-      }, 5000);
-    }).then(() => {
-      navigate({ pathname: '/' });
-    });
-
-    toaster.promise(promise, {
-      success: {
-        title: 'login Success',
-        description: `Wellcome ${data.loginId}`,
-      },
-      error: {
-        title: 'login failed',
-        description: 'Something went wrong, abort Regristration Process',
-      },
-      loading: { title: 'login...', description: 'Please wait' },
-    });
-  };
+  const { errors, handleSubmit, isPending, onLogin, register } = useLoginForm();
 
   return (
     <Box>
@@ -70,7 +25,7 @@ export default function LoginForm() {
           Login to Circle
         </Box>
       </Box>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onLogin)}>
         <Stack w="full" gap="4">
           <Field.Root invalid={!!errors.loginId?.message} required>
             <Box pos="relative" w="full">
@@ -120,8 +75,9 @@ export default function LoginForm() {
             rounded={'4xl'}
             bg={'brand.solid'}
             type={'submit'}
+            disabled={isPending ? true : false}
           >
-            Login
+            {isPending ? <Spinner /> : 'Login'}
           </Button>
         </Box>
       </Form>

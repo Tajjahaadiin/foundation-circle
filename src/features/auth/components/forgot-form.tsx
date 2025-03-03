@@ -1,57 +1,23 @@
 import {
   Box,
-  Field,
-  Input,
-  HStack,
   Button,
-  Image,
   Container,
-  Text,
+  Field,
   FieldErrorText,
+  HStack,
+  Image,
+  Input,
+  Spinner,
+  Text,
 } from '@chakra-ui/react';
 // import {useForm} from 'react-hook-fom'
-import { Form, Link } from 'react-router';
 import circleLogo from '@/assets/logo.svg';
 import { floatingStyles } from '@/lib/theme';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import {
-  forgotPasswordSchema,
-  ForgotPasswordSchemaDTO,
-} from '@/utils/schemas/auth-schemas';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toaster } from '@/components/ui/toaster';
+import { Form, Link } from 'react-router';
+import { useForgotPasswordForm } from '../hooks/use-forgot-password-form';
 export default function ForgotForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ForgotPasswordSchemaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(forgotPasswordSchema),
-  });
-  const navigate = useNavigate();
-  const onSubmit = (data: ForgotPasswordSchemaDTO) => {
-    const promise = new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 5000);
-    }).then(() => {
-      navigate({ pathname: '/' });
-    });
-
-    toaster.promise(promise, {
-      success: {
-        title: 'Change Granted',
-        description: `Wellcome ${data.email}`,
-      },
-      error: {
-        title: 'Change failed',
-        description: 'Something went wrong, abort  Process',
-      },
-      loading: { title: 'FogotPassword...', description: 'Please wait' },
-    });
-  };
+  const { errors, handleSubmit, isPending, onSubmit, register } =
+    useForgotPasswordForm();
 
   return (
     <Container maxW="md" mt="128px">
@@ -87,8 +53,9 @@ export default function ForgotForm() {
             rounded={'4xl'}
             bg={'brand.solid'}
             type={'submit'}
+            disabled={isPending ? true : false}
           >
-            Send Instruction
+            {isPending ? <Spinner /> : 'Send instruction'}
           </Button>
         </Box>
       </Form>

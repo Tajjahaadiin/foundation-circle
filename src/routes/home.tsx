@@ -1,9 +1,5 @@
-import { Box } from '@chakra-ui/react';
+import HomePage from '@/features/home/components/home';
 
 export default function Home() {
-  return (
-    <Box minH={'dvh'}>
-      <h1>Homepage</h1>
-    </Box>
-  );
+  return <HomePage />;
 }

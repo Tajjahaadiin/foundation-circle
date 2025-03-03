@@ -42,7 +42,7 @@ export const system = createSystem(defaultConfig, {
         },
       },
       fonts: {
-        body: { value: 'Plus Jakarta Sans, serif' },
+        body: { value: 'Plus Jakarta Sans, Poppins, serif' },
       },
     },
   },

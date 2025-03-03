@@ -1,58 +1,21 @@
-import {
-  Box,
-  Field,
-  Input,
-  Stack,
-  HStack,
-  Button,
-  Image,
-  Container,
-  Text,
-  FieldErrorText,
-} from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
-import { Form, Link } from 'react-router';
 import circleLogo from '@/assets/logo.svg';
 import { floatingStyles } from '@/lib/theme';
 import {
-  registerSchema,
-  RegisterSchemaDTO,
-} from '@/utils/schemas/auth-schemas';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toaster } from '@/components/ui/toaster';
-import { useNavigate } from 'react-router-dom';
+  Box,
+  Button,
+  Container,
+  Field,
+  FieldErrorText,
+  HStack,
+  Image,
+  Input,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
+import { Form, Link } from 'react-router';
+import useRegister from '../hooks/use-register';
 export default function RegisterForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterSchemaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(registerSchema),
-  });
-  console.log('error', errors);
-  const navigate = useNavigate();
-
-  const onSubmit = (data: RegisterSchemaDTO) => {
-    console.log(data);
-    const promise = new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), 5000);
-    }).then(() => {
-      navigate({ pathname: '/' });
-    });
-
-    toaster.promise(promise, {
-      success: {
-        title: 'Register Success',
-        description: `Wellcome ${data.fullName}`,
-      },
-      error: {
-        title: 'Register failed',
-        description: 'Something went wrong, abort Regristration Process',
-      },
-      loading: { title: 'Register...', description: 'Please wait' },
-    });
-  };
+  const { errors, handleSubmit, isPending, onSubmit, register } = useRegister();
   return (
     <Container maxW="md" mt="128px">
       <Box my="20px">
@@ -80,7 +43,7 @@ export default function RegisterForm() {
             </Box>
             <FieldErrorText>{errors.fullName?.message}</FieldErrorText>
           </Field.Root>
-          <Field.Root invalid={!!errors['userName']?.message} required>
+          <Field.Root invalid={!!errors['username']?.message} required>
             <Box pos="relative" w="full">
               <Input
                 className="peer"
@@ -88,13 +51,13 @@ export default function RegisterForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
-                {...register('userName')}
+                {...register('username')}
               />
               <Field.Label css={floatingStyles}>
                 Username <Field.RequiredIndicator />
               </Field.Label>
             </Box>
-            <FieldErrorText>{errors.userName?.message}</FieldErrorText>
+            <FieldErrorText>{errors.username?.message}</FieldErrorText>
           </Field.Root>
           <Field.Root invalid={!!errors['email']?.message} required>
             <Box pos="relative" w="full">
@@ -140,6 +103,7 @@ export default function RegisterForm() {
             borderRadius="full"
             bg={'brand.solid'}
             type="submit"
+            loading={isPending ? true : false}
           >
             Let's Go
           </Button>

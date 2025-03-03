@@ -6,66 +6,18 @@ import {
   FieldErrorText,
   Image,
   Input,
+  Spinner,
   Stack,
 } from '@chakra-ui/react';
 // import {useForm} from 'react-hook-fom'
 import circleLogo from '@/assets/logo.svg';
 import { floatingStyles } from '@/lib/theme';
 import { Form } from 'react-router';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { userDatas } from '@/utils/datas/user';
-import {
-  resetPasswordSchema,
-  ResetPasswordSchemaDTO,
-} from '@/utils/schemas/auth-schemas';
-import { toaster } from '@/components/ui/toaster';
+import { usePasswordForm } from '../hooks/use-password-form';
+
 export default function ResetForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm<ResetPasswordSchemaDTO>({
-    mode: 'all',
-    resolver: zodResolver(resetPasswordSchema),
-  });
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const email = searchParams.get('email');
-
-  const onSubmit = (data: ResetPasswordSchemaDTO) => {
-    const user = userDatas.find((userData) => userData.email === email);
-    const promise = new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        if (!user) {
-          reject();
-        } else if (user.password === watch('password')) {
-          reject();
-        } else {
-          resolve();
-        }
-      }, 5000);
-    }).then(() => {
-      navigate({ pathname: '/login' });
-    });
-
-    console.log(data);
-
-    toaster.promise(promise, {
-      success: {
-        title: 'Change Granted',
-        description: `succesfully`,
-      },
-      error: {
-        title: 'Change failed',
-        description: 'Something went wrong, abort  Process',
-      },
-      loading: { title: 'reset pasword...', description: 'Please wait' },
-    });
-  };
-
+  const { errors, handleSubmit, onSubmit, isPending, register } =
+    usePasswordForm();
   return (
     <Container maxW="md" mt="128px">
       <Box my="20px">
@@ -76,7 +28,7 @@ export default function ResetForm() {
       </Box>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Stack w="full" gap="4">
-          <Field.Root invalid={!!errors['password']?.message} required>
+          <Field.Root invalid={!!errors['newPassword']?.message} required>
             <Box pos="relative" w="full">
               <Input
                 className="peer"
@@ -86,12 +38,12 @@ export default function ResetForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
-                {...register('password')}
+                {...register('newPassword')}
               />
               <Field.Label css={floatingStyles}>
                 New Password <Field.RequiredIndicator />
               </Field.Label>
-              <FieldErrorText>{errors.password?.message}</FieldErrorText>
+              <FieldErrorText>{errors.confirmPassword?.message}</FieldErrorText>
             </Box>
           </Field.Root>
           <Field.Root invalid={!!errors['confirmPassword']?.message} required>
@@ -109,7 +61,7 @@ export default function ResetForm() {
               <Field.Label css={floatingStyles}>
                 Confirm New Password <Field.RequiredIndicator />
               </Field.Label>
-              <FieldErrorText>{errors.password?.message}</FieldErrorText>
+              <FieldErrorText>{errors.confirmPassword?.message}</FieldErrorText>
             </Box>
           </Field.Root>
         </Stack>
@@ -121,8 +73,9 @@ export default function ResetForm() {
             borderRadius="full"
             bg={'brand.solid'}
             type="submit"
+            disabled={isPending ? true : false}
           >
-            Create New Password
+            {isPending ? <Spinner /> : 'Create New Password'}
           </Button>
         </Box>
       </Form>
