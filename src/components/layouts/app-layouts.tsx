@@ -22,7 +22,7 @@ import {
 } from 'react-router-dom';
 import { Avatar } from '../ui/avatar';
 import MyBrandBtn from '../ui/brand-button';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore, UserProfile } from '@/stores/authStore';
 import Cookies from 'js-cookie';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
@@ -35,14 +35,20 @@ export default function Applayout() {
     startLoading,
     stopLoading,
   } = useAuthStore();
-
+  interface CheckResponse {
+    message: string;
+    data: {
+      user: UserProfile;
+    };
+  }
   const { isLoading, isError } = useQuery({
     queryKey: ['check-auth'],
     queryFn: async () => {
       try {
         startLoading();
         const token = Cookies.get('token');
-        const response = await api.post(
+        console.log('token', token);
+        const response = await api.post<CheckResponse>(
           '/auth/check',
           {},
           {
@@ -51,8 +57,8 @@ export default function Applayout() {
             },
           }
         );
-
-        setUser(response.data.data);
+        console.log('responseData', response.data.data);
+        setUser(response.data.data.user);
         return response.data;
       } catch (error) {
         console.log(error);
@@ -75,7 +81,7 @@ export default function Applayout() {
   if (isError) {
     return <Navigate to="/login" />;
   }
-  console.log('this is user: ', user);
+  // console.log('this is user: ', user);
 
   if (!user) {
     console.log('something went wrong, navigate to login');

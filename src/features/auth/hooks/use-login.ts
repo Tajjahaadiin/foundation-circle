@@ -64,7 +64,7 @@ export function useLoginForm() {
         logIdentifier
       );
       setUser(response.data.data.user);
-      console.log(response.data.data.user);
+      console.log('data from login', response.data.data.user);
       Cookies.set('token', response.data.data.token, {
         expires: 1,
       });

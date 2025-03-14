@@ -13,13 +13,13 @@ import { arrowLeftLogo } from '@/assets/icons';
 import { useAuthStore } from '@/stores/authStore';
 
 export default function ProfileInfo(props: FlexProps) {
-  const {
-    user: {
-      username,
-      profile: { fullName, avatarUrl },
-    },
-  } = useAuthStore();
+  const { user } = useAuthStore();
+  const fullName = user?.profile?.fullName;
+  const username = user?.username;
+  const avatarUrl = user?.profile?.avatarUrl;
   const location = useLocation();
+  console.log('userData', user);
+  console.log('fullname', user?.profile?.fullName);
   const searchParams = new URLSearchParams(location.search);
 
   const hasAnyQueryParam = searchParams.toString() !== '';
@@ -27,7 +27,6 @@ export default function ProfileInfo(props: FlexProps) {
   console.log('condition', hasAnyQueryParam);
   const buttonText = hasAnyQueryParam ? 'Follow' : 'edit profile';
   const profileText = hasAnyQueryParam ? `✨${fullName}✨` : 'My Profile';
-
   return (
     <Flex flexDir={'column'} h={'full'} {...props}>
       <Flex alignItems={'center'} mb={'2'}>

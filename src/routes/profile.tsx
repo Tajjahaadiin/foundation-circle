@@ -6,10 +6,8 @@ import { Thread } from '@/features/thread/dto/thread';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
 export default function ProfileRoute() {
-  const {
-    user: { id: userId },
-  } = useAuthStore();
-
+  const { user } = useAuthStore();
+  const userId = user?.id;
   const {
     data: threads,
     isLoading,

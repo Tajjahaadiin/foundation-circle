@@ -7,7 +7,7 @@ export default [
     route('search', 'routes/search-users.tsx'),
     route('follows', 'routes/follows.tsx'),
     route('profile', 'routes/profile.tsx'),
-    route('detail/:id', 'routes/thread-detail.tsx'),
+    route('detail/:threadId', 'routes/thread-detail.tsx'),
   ]),
   layout('components/layouts/auth-layout.tsx', [
     route('login', 'routes/login.tsx'),

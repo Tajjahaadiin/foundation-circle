@@ -1,19 +1,43 @@
 import CardReply from '@/features/home/components/card-reply';
 import CardThreadDetail from '@/features/home/components/card-thread-detail';
-import CreateThread from '@/features/home/components/create-thread';
-import { postDatas } from '@/utils/__mock/posts';
-import { Box } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import CreateReply from '@/features/home/components/create-reply';
+import { Thread } from '@/features/thread/types/thread';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
+import { Box, Spinner } from '@chakra-ui/react';
 
-export default function PostDetail() {
-  const { id } = useParams();
-  const postData = postDatas.find((post) => post.id === id)!;
-
+interface detailId {
+  threadId: string;
+}
+export default function ThreadDetail(detailId: detailId) {
+  const { threadId } = detailId;
+  // const { threadId } = useParams();
+  console.log(threadId);
+  const { data, isLoading } = useQuery<Thread>({
+    queryKey: [`threads/${threadId}`],
+    queryFn: async () => {
+      const response = await api.get(`threads/${threadId}`);
+      return response.data;
+    },
+  });
+  console.log('user data', { ...data });
   return (
     <Box>
-      <CardThreadDetail postData={postData} />
-      <CreateThread />
-      {postData?.replies?.map((reply) => <CardReply replyData={reply} />)}
+      {isLoading ? (
+        <Box display={'flex'} justifyContent={'center'} py={50}>
+          <Spinner />
+        </Box>
+      ) : (
+        <>
+          {data && (
+            <>
+              <CardThreadDetail {...data} />
+              <CreateReply />
+              {data?.replies?.map((reply) => <CardReply {...reply} />)}
+            </>
+          )}
+        </>
+      )}
     </Box>
   );
 }
