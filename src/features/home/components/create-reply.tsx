@@ -85,10 +85,7 @@ export default function CreateReply() {
         <Box display={'flex'} alignItems={'center'} gap={'20px'}>
           <Avatar
             name={fullName || ''}
-            src={
-              avatarUrl ||
-              `https://api.dicebear.com/9.x/big-smile/svg?seed=${fullName || ''}`
-            }
+            src={avatarUrl || ''}
             shape="full"
             size="full"
             width={'50px'}
@@ -96,6 +93,7 @@ export default function CreateReply() {
           />
           <Field.Root invalid={!!errors.content?.message}>
             <Textarea
+              color={'white'}
               placeholder="What is happening?!"
               {...register('content')}
             />

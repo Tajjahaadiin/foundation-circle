@@ -21,11 +21,13 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { Avatar } from '../ui/avatar';
-import MyBrandBtn from '../ui/brand-button';
 import { useAuthStore, UserProfile } from '@/stores/authStore';
 import Cookies from 'js-cookie';
 import { api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
+import { CreatePost } from '@/features/home/components/create-dialog-thread';
+import { UpdateProfileButton } from '@/features/profile/components/profile-update';
+import SuggestionSection from '@/features/suggestion/suggestion';
 
 export default function Applayout() {
   const {
@@ -47,7 +49,6 @@ export default function Applayout() {
       try {
         startLoading();
         const token = Cookies.get('token');
-        console.log('token', token);
         const response = await api.post<CheckResponse>(
           '/auth/check',
           {},
@@ -57,7 +58,7 @@ export default function Applayout() {
             },
           }
         );
-        console.log('responseData', response.data.data);
+        // console.log('responseData', response.data.data);
         setUser(response.data.data.user);
         return response.data;
       } catch (error) {
@@ -120,7 +121,7 @@ export default function Applayout() {
         minHeight={'dvh'}
         colSpan={{ base: 4, lg: 2 }}
         borderX={'1px solid'}
-        borderColor={'border'}
+        borderColor={'bdr'}
       >
         <Outlet />
       </GridItem>
@@ -160,7 +161,7 @@ export function SidebarLeft() {
       <GridItem rowSpan={4} className="nav-middle">
         <Flex h={'full'} flexDir={'column'} spaceY={'5'} pt={'5'}>
           {NAV_LINK_MENU.map(({ label, logo, path }, index) => (
-            <Flex px={5}>
+            <Flex px={5} key={index}>
               <ChakraLink asChild key={index} w={'full'}>
                 <NavLink to={path}>
                   <Flex w={'full'} alignItems={'center'} spaceX={'4'}>
@@ -168,15 +169,15 @@ export function SidebarLeft() {
                       src={pathname === path ? logo.fill : logo.outline}
                       width={'10%'}
                     />
-                    <Text fontSize={'1rem'}>{label}</Text>
+                    <Text fontSize={'1rem'} color={'white'}>
+                      {label}
+                    </Text>
                   </Flex>
                 </NavLink>
               </ChakraLink>
             </Flex>
           ))}
-          <MyBrandBtn mx={'5'} key="1">
-            create post
-          </MyBrandBtn>
+          <CreatePost />
         </Flex>
       </GridItem>
       <GridItem rowSpan={1} className="nav-bottom">
@@ -206,7 +207,7 @@ export function SidebarLeft() {
 }
 export function SidebarRight() {
   const user = useAuthStore((state) => state.user);
-
+  // console.log('userData', user);
   return (
     <Grid
       templateRows={'repeat(7,82px)'}
@@ -224,224 +225,67 @@ export function SidebarRight() {
         p={'3'}
       >
         <Flex flexDir={'column'} h={'full'}>
-          <Text>My Profile</Text>
+          <Text color={'white'}>My Profile</Text>
           <Flex flexDir={'column'}>
             <Box
               position="relative"
               h={'12vh'}
               w={'full'}
-              bgImage={`url("https://api.dicebear.com/9.x/glass/svg?seed=${user?.profile?.fullName}")`}
+              bg={'white'}
+              bgImage={user?.profile.bannerUrl || ''}
               alignSelf={'center'}
               rounded={'lg'}
             >
               <Float placement={'bottom-start'} offsetX="10">
                 <Avatar
                   name={user?.profile?.fullName || ''}
-                  src={
-                    user?.profile?.avatarUrl ||
-                    `https://api.dicebear.com/9.x/big-smile/svg?seed=${user?.profile?.fullName || ''}`
-                  }
+                  src={user?.profile?.avatarUrl}
                   size={'xl'}
                 />
               </Float>
             </Box>
-            <Button
-              w={'7vw'}
-              h={'5vh'}
-              mt={'2'}
-              alignSelf={'end'}
-              bg={'none'}
-              color={'white'}
-              borderWidth={'1px'}
-              borderColor={'white'}
-              rounded={'full'}
-              alignItems={'center'}
-            >
-              Edit Profile
-            </Button>
+            <Flex justifyContent={'end'} my={'2'}>
+              <UpdateProfileButton />
+            </Flex>
           </Flex>
 
           <Flex flexDir={'column'} gap={'1'}>
-            <Text textStyle={'md'}>✨{user?.profile?.fullName || ''}✨</Text>
+            <Text textStyle={'md'} color={'white'}>
+              {user?.profile?.fullName || ''}
+            </Text>
             <Text textStyle={'xs'} color={'text.light'}>
               @ {user?.username || ''}
             </Text>
-            <Text textStyle={'sm'}>{user?.profile?.bio}</Text>
+            <Text textStyle={'sm'} color={'white'}>
+              {user?.profile?.bio}
+            </Text>
             <Flex gap={'2'} textStyle={'sm'} w={'full'}>
-              <Text textStyle={'sm'} color={'text.light'}>
-                200 Followers
-              </Text>
-              <Text textStyle={'sm'} color={'text.light'}>
-                100 Following
-              </Text>
+              <Flex gap={'2'}>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  {user?.followersCount || '0'}
+                </Text>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  Followers
+                </Text>
+              </Flex>
+
+              <Flex gap={'2'}>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  {user?.followingCount || '0'}
+                </Text>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  following
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>
       </GridItem>
       <GridItem rowSpan={3} bg={'card'} rounded={'l3'} p={'1.5vh'}>
-        <Text my={'0.5vh'} textStyle={'sm'}>
+        <Text my={'0.5vh'} textStyle={'sm'} color={'white'}>
           Suggested For you
         </Text>
-        <Grid templateColumns={'repeat(7,1fr)'} className="follow-card">
-          <GridItem colSpan={1}>
-            <Avatar
-              src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${Math.random()}`}
-              size={'sm'}
-            />
-          </GridItem>
-          <GridItem colSpan={5} px={'3'}>
-            <Flex flexDir={'column'}>
-              <Text textStyle={'sm'}>Bamus e</Text>
-              <Text textStyle={'xs'} color={'text.light'}>
-                @Bramus
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Button
-              w={'5vw'}
-              h={'3.5vh'}
-              mt={'2'}
-              textStyle={'xs'}
-              alignSelf={'end'}
-              bg={'none'}
-              color={'white'}
-              borderWidth={'1px'}
-              borderColor={'white'}
-              rounded={'full'}
-            >
-              Following
-            </Button>
-          </GridItem>
-        </Grid>
-        <Grid templateColumns={'repeat(7,1fr)'} className="follow-card">
-          <GridItem colSpan={1}>
-            <Avatar
-              src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${Math.random()}`}
-              size={'sm'}
-            />
-          </GridItem>
-          <GridItem colSpan={5} px={'3'}>
-            <Flex flexDir={'column'}>
-              <Text textStyle={'sm'}>Busta rum</Text>
-              <Text textStyle={'xs'} color={'text.light'}>
-                @Bus4
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Button
-              w={'5vw'}
-              h={'3.5vh'}
-              mt={'2'}
-              textStyle={'xs'}
-              alignSelf={'end'}
-              bg={'none'}
-              color={'white'}
-              borderWidth={'1px'}
-              borderColor={'white'}
-              rounded={'full'}
-            >
-              Following
-            </Button>
-          </GridItem>
-        </Grid>
-        <Grid templateColumns={'repeat(7,1fr)'} className="follow-card">
-          <GridItem colSpan={1}>
-            <Avatar
-              src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${Math.random()}`}
-              size={'sm'}
-            />
-          </GridItem>
-          <GridItem colSpan={5} px={'3'}>
-            <Flex flexDir={'column'}>
-              <Text textStyle={'sm'}>Lemon </Text>
-              <Text textStyle={'xs'} color={'text.light'}>
-                @Jhonlemon
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Button
-              w={'5vw'}
-              h={'3.5vh'}
-              mt={'2'}
-              textStyle={'xs'}
-              alignSelf={'end'}
-              bg={'none'}
-              color={'white'}
-              borderWidth={'1px'}
-              borderColor={'white'}
-              rounded={'full'}
-            >
-              Following
-            </Button>
-          </GridItem>
-        </Grid>
-        <Grid templateColumns={'repeat(7,1fr)'} className="follow-card">
-          <GridItem colSpan={1}>
-            <Avatar
-              src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${Math.random()}`}
-              size={'sm'}
-            />
-          </GridItem>
-          <GridItem colSpan={5} px={'3'}>
-            <Flex flexDir={'column'}>
-              <Text textStyle={'sm'}>Raven Doe</Text>
-              <Text textStyle={'xs'} color={'text.light'}>
-                @Raven
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Button
-              w={'5vw'}
-              h={'3.5vh'}
-              mt={'2'}
-              textStyle={'xs'}
-              alignSelf={'end'}
-              bg={'none'}
-              color={'white'}
-              borderWidth={'1px'}
-              borderColor={'white'}
-              rounded={'full'}
-            >
-              Following
-            </Button>
-          </GridItem>
-        </Grid>
-        <Grid templateColumns={'repeat(7,1fr)'} className="follow-card">
-          <GridItem colSpan={1}>
-            <Avatar
-              src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${Math.random()}`}
-              size={'sm'}
-            />
-          </GridItem>
-          <GridItem colSpan={5} px={'3'}>
-            <Flex flexDir={'column'}>
-              <Text textStyle={'sm'}>Lemos</Text>
-              <Text textStyle={'xs'} color={'text.light'}>
-                @Leomos4
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Button
-              w={'5vw'}
-              h={'3.5vh'}
-              mt={'2'}
-              textStyle={'xs'}
-              alignSelf={'end'}
-              bg={'none'}
-              color={'white'}
-              borderWidth={'1px'}
-              borderColor={'white'}
-              rounded={'full'}
-            >
-              Following
-            </Button>
-          </GridItem>
-        </Grid>
+        <SuggestionSection />
       </GridItem>
       <GridItem rowSpan={1} bg={'card'} rounded={'l3'}></GridItem>
     </Grid>

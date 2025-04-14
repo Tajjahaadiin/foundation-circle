@@ -20,9 +20,9 @@ export default function HomePage() {
   });
   return (
     <Box>
-      <Box borderBottom={'2px solid'} borderColor={'border'}>
+      <Box borderBottom={'2px solid'} borderColor={'bdr'}>
         <Box px={'40px'} pt={'20px'}>
-          <Text>Home</Text>
+          <Text color={'white'}>Home</Text>
           <CreateThreads />
         </Box>
       </Box>
@@ -38,7 +38,7 @@ export default function HomePage() {
               thread={thread}
               key={thread.id}
               borderBottom={'2px solid'}
-              borderColor={'border'}
+              borderColor={'bdr'}
             />
           ))}
         </Flex>

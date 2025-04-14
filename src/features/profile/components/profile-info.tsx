@@ -8,25 +8,30 @@ import {
   Text,
   Image,
 } from '@chakra-ui/react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { arrowLeftLogo } from '@/assets/icons';
 import { useAuthStore } from '@/stores/authStore';
 
 export default function ProfileInfo(props: FlexProps) {
   const { user } = useAuthStore();
+
   const fullName = user?.profile?.fullName;
   const username = user?.username;
   const avatarUrl = user?.profile?.avatarUrl;
-  const location = useLocation();
+  const bannerUrl = user?.profile.bannerUrl;
+  const bio = user?.profile.bio;
+  const navigate = useNavigate();
   console.log('userData', user);
   console.log('fullname', user?.profile?.fullName);
-  const searchParams = new URLSearchParams(location.search);
+  const { userId } = useParams();
 
-  const hasAnyQueryParam = searchParams.toString() !== '';
-
+  const hasAnyQueryParam = userId !== undefined;
   console.log('condition', hasAnyQueryParam);
   const buttonText = hasAnyQueryParam ? 'Follow' : 'edit profile';
-  const profileText = hasAnyQueryParam ? `✨${fullName}✨` : 'My Profile';
+  const profileText = hasAnyQueryParam ? `${fullName}` : 'My Profile';
+  function backHome() {
+    navigate('/');
+  }
   return (
     <Flex flexDir={'column'} h={'full'} {...props}>
       <Flex alignItems={'center'} mb={'2'}>
@@ -34,28 +39,32 @@ export default function ProfileInfo(props: FlexProps) {
           variant={'ghost'}
           display={'flex'}
           gap={'4px'}
+          _hover={{ bg: 'initial' }}
           color={'secondary'}
+          onClick={backHome}
         >
           <Image src={arrowLeftLogo} width={'27px'} />
         </Button>
-        <Text>{profileText}</Text>
+        <Text color={'white'}>{profileText}</Text>
       </Flex>
-      <Flex flexDir={'column'}>
+      <Flex flexDir={'column'} px={'6'}>
         <Box
           position="relative"
           h={'12vh'}
           w={'full'}
-          backgroundImage={`url("https://api.dicebear.com/9.x/glass/svg?seed=${fullName}")`}
+          bg={'white'}
+          backgroundImage={bannerUrl ?? ''}
           alignSelf={'center'}
           rounded={'lg'}
         >
           <Float placement={'bottom-start'} offsetX="10">
             <Avatar
-              src={
-                avatarUrl ||
-                `https://api.dicebear.com/9.x/big-smile/svg?seed=${fullName || ''}`
-              }
-              size={'xl'}
+              name={fullName || ''}
+              src={avatarUrl ?? ''}
+              shape="full"
+              size="full"
+              width={'50px'}
+              height={'50px'}
             />
           </Float>
         </Box>
@@ -75,12 +84,14 @@ export default function ProfileInfo(props: FlexProps) {
         </Button>
       </Flex>
 
-      <Flex flexDir={'column'} gap={'1'}>
-        <Text textStyle={'md'}>✨{fullName}✨</Text>
-        <Text textStyle={'xs'} color={'text.light'}>
-          {username}
+      <Flex flexDir={'column'} gap={'1'} px={'6'}>
+        <Text textStyle={'md'} color={'white'}>
+          {fullName}
         </Text>
-        <Text textStyle={'sm'}>I believe i can fly</Text>
+        <Text textStyle={'xs'} color={'text.light'}>
+          @{username}
+        </Text>
+        <Text textStyle={'sm'}>{bio || ''}</Text>
         <Flex gap={'2'} textStyle={'sm'} w={'full'}>
           <Text textStyle={'sm'} color={'text.light'}>
             200 Followers

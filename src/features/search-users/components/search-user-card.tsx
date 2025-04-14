@@ -1,6 +1,8 @@
 import { Avatar } from '@/components/ui/avatar';
 import { Box, BoxProps, Button, Text } from '@chakra-ui/react';
 import { SearchUser } from '../types/search-user';
+import useFollow from '@/features/follow/hooks/use-follow';
+import UseUnFollows from '@/features/follow/hooks/use-unfollow';
 
 interface SearchUserCardProps extends BoxProps {
   searchUserData: SearchUser;
@@ -10,21 +12,20 @@ export default function SearchUserCard({
   searchUserData,
   ...props
 }: SearchUserCardProps) {
+  const { isPending: isPendingFollow, onFollow } = useFollow();
+  const { isPending: isPendingUnFollow, onUnFollow } = UseUnFollows();
   return (
     <Box
       p={'20px'}
       display={'flex'}
       gap={'16px'}
       borderBottom={'3px solid'}
-      borderColor={'border'}
+      borderColor={'bdr'}
       {...props}
     >
       <Avatar
         name={searchUserData.profile.fullName || ''}
-        src={
-          searchUserData.profile.avatarUrl ||
-          `https://api.dicebear.com/9.x/big-smile/svg?seed=${searchUserData.profile.fullName || ''}`
-        }
+        src={searchUserData.profile.avatarUrl || ''}
         shape="full"
         size="full"
         width={'50px'}
@@ -32,8 +33,10 @@ export default function SearchUserCard({
       />
 
       <Box display={'flex'} flexDirection={'column'} gap={'4px'} flex={'10'}>
-        <Text fontWeight={'bold'}>{searchUserData.profile.fullName}</Text>
-        <Text color={'secondary'}>@{searchUserData.username}</Text>
+        <Text fontWeight={'bold'} color={'white'}>
+          {searchUserData.profile.fullName}
+        </Text>
+        <Text color={'text.light'}>@{searchUserData.username}</Text>
         <Text>{searchUserData.profile.bio || ''}</Text>
       </Box>
       <Button
@@ -45,14 +48,17 @@ export default function SearchUserCard({
         borderColor={'white'}
         rounded={'full'}
         alignItems={'center'}
-        flex={'1'}
-        onClick={() => {
-          // searchUserData.isFollowed = !searchUserData.isFollowed;
-          // forceUpdate();
-        }}
+        flex={'3'}
+        disabled={isPendingFollow || isPendingUnFollow}
+        onClick={() =>
+          searchUserData.isFollowing
+            ? onUnFollow({ followedId: searchUserData.id })
+            : onFollow({ followedId: searchUserData.id })
+        }
       >
-        Follow
-        {/* {searchUserData.isFollowed ? 'Unfollow' : 'Follow'} */}
+        <Text textStyle={'xs'} color={'white'}>
+          {searchUserData.isFollowing ? 'Unfollow' : 'Follow'}
+        </Text>
       </Button>
     </Box>
   );

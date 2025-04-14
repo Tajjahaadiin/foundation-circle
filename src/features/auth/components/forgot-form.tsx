@@ -33,8 +33,11 @@ export default function ForgotForm() {
             <Input
               className="peer"
               placeholder=""
-              borderRadius="8"
+              rounded={'lg'}
+              borderWidth={'2px'}
+              borderColor={'#545454'}
               type="email"
+              color={'white'}
               {...register('email')}
             />
             <Field.Label css={floatingStyles}>
@@ -60,7 +63,9 @@ export default function ForgotForm() {
         </Box>
       </Form>
       <HStack direction={'row'} w="full" mt="12px">
-        <Text fontSize={{ base: '14px' }}>already have account? </Text>
+        <Text fontSize={{ base: '14px' }} color={'text.light'}>
+          already have account?{' '}
+        </Text>
         <Link to={'/login'}>
           <Text color="brand.solid" fontSize={{ base: '14px' }}>
             Login

@@ -5,6 +5,7 @@ import { Thread } from '@/features/thread/types/thread';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { Box, Spinner } from '@chakra-ui/react';
+// import { useNavigate } from 'react-router-dom';
 
 interface detailId {
   threadId: string;
@@ -20,7 +21,7 @@ export default function ThreadDetail(detailId: detailId) {
       return response.data;
     },
   });
-  console.log('user data', { ...data });
+
   return (
     <Box>
       {isLoading ? (
@@ -31,8 +32,12 @@ export default function ThreadDetail(detailId: detailId) {
         <>
           {data && (
             <>
-              <CardThreadDetail {...data} />
-              <CreateReply />
+              <Box borderBottom={'1px solid'} borderColor={'bdr'}>
+                <CardThreadDetail {...data} />
+              </Box>
+              <Box px={'10'}>
+                <CreateReply />
+              </Box>
               {data?.replies?.map((reply) => <CardReply {...reply} />)}
             </>
           )}

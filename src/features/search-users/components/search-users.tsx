@@ -15,6 +15,7 @@ export default function SearchUsers() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchText(e.target.value);
   }
+
   const {
     data: users,
     isLoading,
@@ -24,6 +25,7 @@ export default function SearchUsers() {
     queryKey: ['search-users'],
     queryFn: async () => {
       const resposnse = await api.get(`/users/search?q=${searchTextDebounced}`);
+      console.log('search', resposnse.data);
       return resposnse.data;
     },
   });
@@ -37,14 +39,15 @@ export default function SearchUsers() {
         px={'20px'}
         pt={'40px'}
         width={'100%'}
-        spaceX={2}
-        startElement={<Image src={searchLogoOutline} width={'20px'} />}
+        spaceX={4}
+        color={'white'}
+        startElement={<Image src={searchLogoOutline} width={'20px'} mx={'3'} />}
       >
         <Input
           placeholder="Username"
           borderRadius={'xl'}
           border={'2px solid'}
-          bg={'border'}
+          bg={'bdr'}
           _focus={{
             borderColor: 'brand.solid',
           }}
@@ -81,7 +84,7 @@ export default function SearchUsers() {
               <Text textStyle={'lg'} fontWeight={'bold'} color={'white'}>
                 No result for "{searchTextDebounced}"
               </Text>
-              <Text textWrap={'wrap'} textStyle={'md'}>
+              <Text textWrap={'wrap'} textStyle={'md'} color={'white'}>
                 Try Searching For Something else or check the spelling that you
                 typed
               </Text>

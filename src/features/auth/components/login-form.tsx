@@ -35,9 +35,10 @@ export default function LoginForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
+                color={'white'}
                 {...register(`loginId`)}
               />
-              <Field.Label css={floatingStyles}>
+              <Field.Label css={floatingStyles} color={'text.light'}>
                 Email/Username <Field.RequiredIndicator />
               </Field.Label>
               <FieldErrorText>{errors.loginId?.message}</FieldErrorText>
@@ -53,9 +54,10 @@ export default function LoginForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
+                color={'white'}
                 {...register('password')}
               />
-              <Field.Label css={floatingStyles}>
+              <Field.Label css={floatingStyles} color={'text.light'}>
                 Password <Field.RequiredIndicator />
               </Field.Label>
               <FieldErrorText>{errors.password?.message}</FieldErrorText>
@@ -63,7 +65,9 @@ export default function LoginForm() {
           </Field.Root>
           <Box w="full" display="flex" justifyContent="flex-end">
             <Button asChild variant="plain">
-              <Link to={'/forgot-password'}>Forgot Password?</Link>
+              <Link to={'/forgot-password'}>
+                <Text color={'text.light'}>Forgot Password?</Text>
+              </Link>
             </Button>
           </Box>
         </Stack>
@@ -83,7 +87,7 @@ export default function LoginForm() {
       </Form>
 
       <HStack fontSize={{ base: '14px' }} direction={'row'} w="full" mt="12px">
-        <Text>don't have an account yet? </Text>
+        <Text color={'text.light'}>don't have an account yet? </Text>
         <Link to={'/register'}>
           <Text color="brand.solid">Create account</Text>
         </Link>

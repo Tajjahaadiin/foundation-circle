@@ -15,10 +15,11 @@ export const system = createSystem(defaultConfig, {
           50: { value: '#1D1D1D' },
         },
         card: { value: '#262626' },
-        border: { value: '#3F3F3F' },
+        bdr: { value: '#3F3F3F' },
         text: {
           50: { value: '#909090' },
-          100: { value: '#FFF' },
+          100: { value: '#FFFFFF' },
+          200: { value: '#fff' },
         },
       },
     },
@@ -35,7 +36,8 @@ export const system = createSystem(defaultConfig, {
         },
         text: {
           light: { value: '{colors.text.50}' },
-          solid: { value: '{colors.text}.100' },
+          bright: { value: '{colors.text}.100' },
+          white: { value: '{colors.text}.200' },
         },
         bgSite: {
           solid: { value: '{colors.bgSite.50}' },
@@ -63,12 +65,12 @@ export const floatingStyles = defineStyle({
   pointerEvents: 'none',
   transition: 'position',
   _peerPlaceholderShown: {
-    color: 'fg.muted',
+    color: 'text.light',
     top: '2.5',
     insetStart: '3',
   },
   _peerFocusVisible: {
-    color: 'fg',
+    color: 'text.light',
     top: '-3',
     insetStart: '2',
   },

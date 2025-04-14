@@ -3,8 +3,8 @@ import { ThreadResponse } from '@/features/thread/dto/thread';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores/authStore';
 import {
-  createThreadSchema,
-  CreateThreadSchemaDTO,
+  updateThreadSchema,
+  UpdateThreadSchemaDTO,
 } from '@/utils/schemas/thread.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -12,8 +12,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+// import { boolean } from 'zod';
 
-export function useCreateThread() {
+export function useUpdateThread(
+  dialog: React.Dispatch<React.SetStateAction<boolean>>
+) {
   const { user } = useAuthStore();
   const fullName = user?.profile?.fullName;
   const avatarUrl = user?.profile?.avatarUrl;
@@ -24,9 +27,9 @@ export function useCreateThread() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateThreadSchemaDTO>({
+  } = useForm<UpdateThreadSchemaDTO>({
     mode: 'onChange',
-    resolver: zodResolver(createThreadSchema),
+    resolver: zodResolver(updateThreadSchema),
   });
   const {
     ref: registerImagesRef,
@@ -41,17 +44,20 @@ export function useCreateThread() {
   const { isPending, mutateAsync } = useMutation<
     ThreadResponse,
     Error,
-    CreateThreadSchemaDTO
+    UpdateThreadSchemaDTO
   >({
-    mutationKey: ['create-thread'],
-    mutationFn: async (data: CreateThreadSchemaDTO) => {
+    mutationKey: ['update-thread'],
+    mutationFn: async (data: UpdateThreadSchemaDTO) => {
       const formData = new FormData();
       formData.append('content', data.content);
       if (data.images) {
         formData.append('images', data.images[0]);
       }
-
-      const response = await api.post<ThreadResponse>('/threads', formData);
+      console.log('images', data.images);
+      const response = await api.post<ThreadResponse>(
+        `/threads/${data.threadId}`,
+        formData
+      );
       return response.data;
     },
     onError: (error) => {
@@ -71,14 +77,19 @@ export function useCreateThread() {
       await queryClient.invalidateQueries({
         queryKey: ['threads'],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [`threads/${data.data.id}`],
+      });
 
       toaster.create({
         title: data.message,
         type: 'success',
+        description: 'update Success',
       });
+      dialog(false);
     },
   });
-  async function onSubmit(data: CreateThreadSchemaDTO) {
+  async function onSubmit(data: UpdateThreadSchemaDTO) {
     await mutateAsync(data);
     clearForm();
   }

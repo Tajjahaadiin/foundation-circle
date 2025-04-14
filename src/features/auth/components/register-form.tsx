@@ -35,9 +35,10 @@ export default function RegisterForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
+                color={'white'}
                 {...register('fullName')}
               />
-              <Field.Label css={floatingStyles}>
+              <Field.Label css={floatingStyles} color={'text.light'}>
                 Full Name <Field.RequiredIndicator />
               </Field.Label>
             </Box>
@@ -51,9 +52,10 @@ export default function RegisterForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
+                color={'white'}
                 {...register('username')}
               />
-              <Field.Label css={floatingStyles}>
+              <Field.Label css={floatingStyles} color={'text.light'}>
                 Username <Field.RequiredIndicator />
               </Field.Label>
             </Box>
@@ -68,9 +70,10 @@ export default function RegisterForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
+                color={'white'}
                 {...register('email')}
               />
-              <Field.Label css={floatingStyles}>
+              <Field.Label css={floatingStyles} color={'text.light'}>
                 Email
                 <Field.RequiredIndicator />
               </Field.Label>
@@ -86,9 +89,10 @@ export default function RegisterForm() {
                 rounded={'lg'}
                 borderWidth={'2px'}
                 borderColor={'#545454'}
+                color={'white'}
                 {...register('password')}
               />
-              <Field.Label css={floatingStyles}>
+              <Field.Label css={floatingStyles} color={'text.light'}>
                 Password <Field.RequiredIndicator />
               </Field.Label>
             </Box>
@@ -110,7 +114,9 @@ export default function RegisterForm() {
         </Box>
       </Form>
       <HStack direction={'row'} w="full" mt="12px">
-        <Text fontSize={{ base: '14px' }}>already have account? </Text>
+        <Text fontSize={{ base: '14px' }} color={'text.light'}>
+          already have account?{' '}
+        </Text>
         <Link to={'/login'}>
           <Text color="brand.solid" fontSize={{ base: '14px' }}>
             Login

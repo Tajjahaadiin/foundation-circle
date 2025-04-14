@@ -1,19 +1,22 @@
 import { Avatar } from '@/components/ui/avatar';
 import { ReplyEntity } from '@/entities/reply.entity';
+import { getRelativeTime } from '@/utils/time-utils';
 import { Box, Text } from '@chakra-ui/react';
 
 export default function CardReply(reply: ReplyEntity) {
+  console.log('this is reply', reply);
   return (
     <Box
       display={'flex'}
       gap={'16px'}
-      borderBottom={'1px solid'}
-      borderColor={'outline'}
-      padding={'16px 0px'}
+      borderBlock={'1px solid'}
+      borderColor={'bdr'}
+      py={'5'}
+      px={'10'}
     >
       <Avatar
         name={reply.user?.profile?.fullName || ''}
-        src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${reply.user?.profile?.fullName || ''}`}
+        src={reply.user?.profile?.avatarUrl || ''}
         shape="full"
         size="full"
         width={'50px'}
@@ -22,14 +25,14 @@ export default function CardReply(reply: ReplyEntity) {
 
       <Box display={'flex'} flexDirection={'column'} gap={'4px'}>
         <Box display={'flex'} gap={'4px'}>
-          <Text fontWeight={'bold'}>{reply.user?.profile?.fullName}</Text>
-          <Text color={'secondary'}>@{reply.user?.username}</Text>
-          <Text color={'secondary'}>•</Text>
-          <Text color={'secondary'}>
-            {new Date(reply.createdAt).getHours()}h
+          <Text fontWeight={'bold'} color={'white'}>
+            {reply.user?.profile?.fullName}
           </Text>
+          <Text color={'text.light'}>@{reply.user?.username}</Text>
+          <Text color={'text.light'}>•</Text>
+          <Text color={'text.light'}>{getRelativeTime(reply.createdAt)}</Text>
         </Box>
-        <Text>{reply.content}</Text>
+        <Text color={'white'}>{reply.content}</Text>
       </Box>
     </Box>
   );

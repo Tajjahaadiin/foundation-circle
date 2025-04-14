@@ -36,7 +36,14 @@ export default function useRegister() {
   >({
     mutationKey: ['register'],
     mutationFn: async (data: RegisterSchemaDTO) => {
-      const response = await api.post<RegisterResponse>('/auth/register', data);
+      const { username, ...rest } = data;
+      const lowercaseUsername = username.toLowerCase();
+      const registerData = { username: lowercaseUsername, ...rest };
+      console.log('username', lowercaseUsername);
+      const response = await api.post<RegisterResponse>(
+        '/auth/register',
+        registerData
+      );
       return response.data;
     },
     onError: (error) => {

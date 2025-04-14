@@ -1,47 +1,29 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { arrowLeftLogo } from '@/assets/icons';
+import FollowPage from '@/features/follow/follow-page';
+import { Button, Flex, Text, Image } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-export default function FollowsPage() {
-  let layerToggle = true;
+export default function FollowRoute() {
+  const navigate = useNavigate();
+  function backHome() {
+    navigate('/');
+  }
   return (
-    <Box>
-      <Text textStyle={'2xl'}>Follows</Text>
-      <Flex w={'full'}>
-        <Text
-          borderBottomWidth={layerToggle ? '5px' : '0'}
-          borderBottomColor={'brand.solid'}
-          flexBasis={'50%'}
+    <Flex p={'16px 0'} flexDir={'column'}>
+      <Flex alignItems={'center'} mb={'2'}>
+        <Button
+          variant={'ghost'}
+          display={'flex'}
+          gap={'4px'}
+          _hover={{ bg: 'initial' }}
+          color={'secondary'}
+          onClick={backHome}
         >
-          <Button
-            variant={'ghost'}
-            _hover={{ bg: 'none' }}
-            textAlign={'center'}
-            size={'2xl'}
-            w={'full'}
-            onClick={() => {
-              layerToggle = !layerToggle;
-              console.log(layerToggle);
-            }}
-          >
-            Followers
-          </Button>
-        </Text>
-        <Text
-          borderBottomWidth={!layerToggle ? '5px' : '0'}
-          borderBottomColor={'brand.solid'}
-          flexBasis={'50%'}
-        >
-          <Button
-            variant={'ghost'}
-            _hover={{ bg: 'none' }}
-            textAlign={'center'}
-            size={'2xl'}
-            w={'full'}
-            onClick={() => !layerToggle}
-          >
-            Following
-          </Button>
-        </Text>
+          <Image src={arrowLeftLogo} width={'27px'} />
+        </Button>
+        <Text color={'white'}>Follow</Text>
       </Flex>
-    </Box>
+      <FollowPage />
+    </Flex>
   );
 }

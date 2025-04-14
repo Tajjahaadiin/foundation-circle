@@ -1,20 +1,23 @@
-import { likeLogo, likeLogoOutline, replyLogoOutline } from '@/assets/icons';
+import { likeLogo, likeLogoOutline } from '@/assets/icons';
 import { Avatar } from '@/components/ui/avatar';
 import { toaster } from '@/components/ui/toaster';
 import { LikeResponse } from '@/features/like/dto/like';
 import { Thread } from '@/features/thread/dto/thread';
 import { api } from '@/lib/api';
-import { formatDate } from '@/utils/format-date';
 import {
   CreateLikeSchemaDTO,
   DeleteLikeSchemaDTO,
 } from '@/utils/schemas/like.schema';
-import { Box, Button, Image, Text } from '@chakra-ui/react';
+import { Box, Button, HStack, Image, Show, Text } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useParams } from 'react-router-dom';
+import { UpdateThread } from './update-thread-dialog';
+import { getRelativeTime } from '@/utils/time-utils';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function CardThreadDetail(thread: Thread) {
+  const { user } = useAuthStore();
   const { threadId } = useParams();
   const queryClient = useQueryClient();
   console.log(thread.user?.profile.fullName);
@@ -89,63 +92,83 @@ export default function CardThreadDetail(thread: Thread) {
   }
 
   return (
-    <Box
-      display={'flex'}
-      flexDirection={'column'}
-      gap={'16px'}
-      borderBottom={'1px solid'}
-      borderColor={'outline'}
-      padding={'16px 0px'}
-    >
-      <Box display={'flex'} gap={'4px'}>
+    <Box>
+      <Box display={'flex'} gap={'16px'} px={'40px'} py={'20px'} w={'full'}>
         <Avatar
-          name={thread.user?.profile?.avatarUrl || ''}
-          src={`https://api.dicebear.com/9.x/big-smile/svg?seed=${thread.user?.profile?.fullName}`}
+          name={thread.user?.profile.fullName || ''}
+          src={thread.user?.profile.avatarUrl ?? ''}
           shape="full"
           size="full"
           width={'50px'}
           height={'50px'}
         />
-        <Box>
-          <Text fontWeight={'bold'}>
-            {thread.user?.profile?.fullName || ''}
-          </Text>
-          <Text color={'secondary'}>@{thread.user?.username || ''}</Text>
-        </Box>
-      </Box>
-
-      <Box display={'flex'} flexDirection={'column'} gap={'4px'}>
-        <Text>{thread.content}</Text>
-
-        <Text color={'secondary'}>
-          {formatDate(new Date(thread.createdAt))}
-        </Text>
-
-        <Box display={'flex'}>
-          <Button
-            variant={'ghost'}
+        <Box display={'flex'} flexDirection={'column'} gap={'4px'} flex={'3'}>
+          <Box display={'flex'} gap={'4px'} alignItems={'center'}>
+            <Text fontWeight={'bold'} textStyle={'md'} color={'white'}>
+              {thread.user?.profile.fullName}
+            </Text>
+            <Text textStyle={'sm'} color={'text.light'}>
+              @{thread.user?.username}
+            </Text>
+            <Text color={'white'}>•</Text>
+            <Text color={'white'} textStyle={'sm'}>
+              {getRelativeTime(thread.createdAt)}
+            </Text>
+          </Box>
+          <Box
+            w={'full'}
+            flexDir={'column'}
+            justifyContent={'center'}
+            alignItems={'start'}
             display={'flex'}
-            gap={'4px'}
-            disabled={isPendingLike || isPendingUnlike}
-            onClick={() =>
-              thread.isLiked
-                ? onUnlike({ threadId: thread.id })
-                : onLike({ threadId: thread.id })
-            }
+            spaceY={5}
           >
+            <Text cursor={'pointer'} color={'white'}>
+              {thread.content}
+            </Text>
             <Image
-              src={thread.isLiked ? likeLogo : likeLogoOutline}
-              width={'27px'}
-            />
-            <Text>{thread.likesCount}</Text>
-          </Button>
-
-          <Button variant={'ghost'} display={'flex'} gap={'4px'}>
-            <Image src={replyLogoOutline} width={'27px'} />
-            <Text>{thread.repliesCount}</Text>
-            <Text>Replies</Text>
-          </Button>
+              src={thread.images}
+              rounded={'4xl'}
+              maxH={'300px'}
+              maxW={'75%'}
+            ></Image>
+          </Box>
+          <Box display={'flex'}>
+            <Button
+              variant={'ghost'}
+              display={'flex'}
+              gap={'4px'}
+              _hover={{ bg: 'initial' }}
+              disabled={isPendingLike || isPendingUnlike}
+              onClick={() =>
+                thread.isLiked
+                  ? onUnlike({ threadId: thread.id })
+                  : onLike({ threadId: thread.id })
+              }
+            >
+              <Image
+                src={thread.isLiked ? likeLogo : likeLogoOutline}
+                width={'27px'}
+              />
+              <Text color={'white'}>{thread.likesCount}</Text>
+            </Button>
+            <Button
+              variant={'ghost'}
+              display={'flex'}
+              _hover={{ bg: 'initial' }}
+              gap={'4px'}
+            ></Button>
+          </Box>
         </Box>
+        <Show when={thread.user?.id === user?.id}>
+          <HStack
+            justifySelf={'flex-start'}
+            alignItems={'start'}
+            zIndex={'docked'}
+          >
+            <UpdateThread thread={thread} />
+          </HStack>
+        </Show>
       </Box>
     </Box>
   );
