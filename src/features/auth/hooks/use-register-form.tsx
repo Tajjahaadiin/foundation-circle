@@ -1,6 +1,9 @@
 import { toaster } from '@/components/ui/toaster';
-import { api } from '@/libs/api';
-import { registerSchema, RegisterSchemaDTO } from '@/utils/schemas/auth.schema';
+import { api } from '@/lib/api';
+import {
+  registerSchema,
+  RegisterSchemaDTO,
+} from '@/utils/schemas/auth.schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
