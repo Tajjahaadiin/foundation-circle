@@ -11,6 +11,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { arrowLeftLogo } from '@/assets/icons';
 import { useAuthStore } from '@/stores/authStore';
+import { UpdateProfileButton } from './profile-update';
 
 export default function ProfileInfo(props: FlexProps) {
   const { user } = useAuthStore();
@@ -20,6 +21,8 @@ export default function ProfileInfo(props: FlexProps) {
   const avatarUrl = user?.profile?.avatarUrl;
   const bannerUrl = user?.profile.bannerUrl;
   const bio = user?.profile.bio;
+  const followerscount = user?.followersCount;
+  const followingCount = user?.followingCount;
   const navigate = useNavigate();
   console.log('userData', user);
   console.log('fullname', user?.profile?.fullName);
@@ -27,7 +30,7 @@ export default function ProfileInfo(props: FlexProps) {
 
   const hasAnyQueryParam = userId !== undefined;
   console.log('condition', hasAnyQueryParam);
-  const buttonText = hasAnyQueryParam ? 'Follow' : 'edit profile';
+  // const buttonText = hasAnyQueryParam ? 'Follow' : 'edit profile';
   const profileText = hasAnyQueryParam ? `${fullName}` : 'My Profile';
   function backHome() {
     navigate('/');
@@ -47,16 +50,24 @@ export default function ProfileInfo(props: FlexProps) {
         </Button>
         <Text color={'white'}>{profileText}</Text>
       </Flex>
-      <Flex flexDir={'column'} px={'6'}>
+      <Flex flexDir={'column'} px={'6'} w={'full'}>
         <Box
           position="relative"
           h={'12vh'}
           w={'full'}
           bg={'white'}
-          backgroundImage={bannerUrl ?? ''}
+          // backgroundImage={bannerUrl ?? ''}
           alignSelf={'center'}
           rounded={'lg'}
         >
+          <Flex w={'full'} maxH={'70px'} rounded={'lg'}>
+            <Image
+              src={bannerUrl ?? ''}
+              rounded={'lg'}
+              objectFit={'cover'}
+              objectPosition={'center'}
+            />
+          </Flex>
           <Float placement={'bottom-start'} offsetX="10">
             <Avatar
               name={fullName || ''}
@@ -68,20 +79,10 @@ export default function ProfileInfo(props: FlexProps) {
             />
           </Float>
         </Box>
-        <Button
-          w={'7vw'}
-          h={'5vh'}
-          mt={'2'}
-          alignSelf={'end'}
-          bg={'none'}
-          color={'white'}
-          borderWidth={'1px'}
-          borderColor={'white'}
-          rounded={'full'}
-          alignItems={'center'}
-        >
-          {buttonText}
-        </Button>
+
+        <Flex alignSelf={'end'} mt={'2'}>
+          <UpdateProfileButton />
+        </Flex>
       </Flex>
 
       <Flex flexDir={'column'} gap={'1'} px={'6'}>
@@ -94,10 +95,10 @@ export default function ProfileInfo(props: FlexProps) {
         <Text textStyle={'sm'}>{bio || ''}</Text>
         <Flex gap={'2'} textStyle={'sm'} w={'full'}>
           <Text textStyle={'sm'} color={'text.light'}>
-            200 Followers
+            {followerscount} Followers
           </Text>
           <Text textStyle={'sm'} color={'text.light'}>
-            10 Following
+            {followingCount} Following
           </Text>
         </Flex>
       </Flex>

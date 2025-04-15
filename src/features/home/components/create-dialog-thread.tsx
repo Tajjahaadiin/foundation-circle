@@ -1,3 +1,4 @@
+import { galleryAddLogo } from '@/assets/icons';
 import { Avatar } from '@/components/ui/avatar';
 import MyBrandBtn from '@/components/ui/brand-button';
 import {
@@ -6,16 +7,14 @@ import {
   CloseButton,
   Dialog,
   Field,
+  Image,
   Input,
   Portal,
-  Textarea,
-  Image,
   Text,
+  Textarea,
 } from '@chakra-ui/react';
-import { useCreateThread } from '../hooks/use-create-thread';
-import { galleryAddLogo } from '@/assets/icons';
 import { useLocation } from 'react-router-dom';
-
+import { useCreateThread } from '../hooks/use-create-thread';
 export const CreatePost = () => {
   const { pathname } = useLocation();
   const isHome = pathname === '/';
@@ -79,7 +78,7 @@ export const CreatePost = () => {
                     gap={'4'}
                     py={'2'}
                     borderBottom={'1px solid'}
-                    borderColor={'white'}
+                    borderColor={'bdr'}
                   >
                     <Avatar
                       name={fullName || ''}
@@ -141,12 +140,14 @@ export const CreatePost = () => {
                       </Text>
                     </Button>
                   </Box>
-                  <Box w={'full'} display={'flex'} justifyContent={'start'}>
+                  <Box w={'full'} display={'flex'} justifyContent={'center'}>
                     <Image
-                      rounded={'3xl'}
                       objectFit={'contain'}
                       maxHeight={'200px'}
-                      maxWidth={'100%'}
+                      minW={'85%'}
+                      rounded={'4xl'}
+                      shadow={'1px 1px 8px 1px rgb(27, 205, 95) '}
+                      shadowColor={'green'}
                       src={previewURL ?? ''}
                     />
                   </Box>

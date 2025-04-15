@@ -15,8 +15,16 @@ import UseDetailProfile from '../hook/use-detail-profile';
 
 export default function ProfileInfoDetail(props: FlexProps) {
   const navigate = useNavigate();
-  const { fullName, username, avatarUrl, bannerUrl, bio, isLoading } =
-    UseDetailProfile();
+  const {
+    fullName,
+    username,
+    avatarUrl,
+    bannerUrl,
+    bio,
+    followersCount,
+    followingCount,
+    isLoading,
+  } = UseDetailProfile();
   function backHome() {
     navigate('/');
   }
@@ -47,10 +55,17 @@ export default function ProfileInfoDetail(props: FlexProps) {
               h={'12vh'}
               w={'full'}
               bg={'white'}
-              backgroundImage={bannerUrl ?? ''}
               alignSelf={'center'}
               rounded={'lg'}
             >
+              <Flex w={'full'} maxH={'70px'} rounded={'lg'}>
+                <Image
+                  src={bannerUrl ?? ''}
+                  rounded={'lg'}
+                  objectFit={'cover'}
+                  objectPosition={'center'}
+                />
+              </Flex>
               <Float placement={'bottom-start'} offsetX="10">
                 <Avatar
                   name={fullName || ''}
@@ -87,12 +102,22 @@ export default function ProfileInfoDetail(props: FlexProps) {
             </Text>
             <Text textStyle={'sm'}>{bio || ''}</Text>
             <Flex gap={'2'} textStyle={'sm'} w={'full'}>
-              <Text textStyle={'sm'} color={'text.light'}>
-                200 Followers
-              </Text>
-              <Text textStyle={'sm'} color={'text.light'}>
-                10 Following
-              </Text>
+              <Flex spaceX={'1'}>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  {followersCount}
+                </Text>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  Followers
+                </Text>
+              </Flex>
+              <Flex spaceX={'1'}>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  {followingCount}
+                </Text>
+                <Text textStyle={'sm'} color={'text.light'}>
+                  Following
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>

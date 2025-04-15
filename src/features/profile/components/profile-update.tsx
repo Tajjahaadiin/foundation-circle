@@ -33,6 +33,14 @@ export const UpdateProfileButton = () => {
     handlePreview,
     handleGalleryAddClick,
     inputFileRef,
+    handleBannerAddClick,
+    handleBannerPreview,
+    inputBannerRef,
+    previewBanner,
+    registerBannerOnChange,
+    registerBannerref,
+    restRegisterBanner,
+    clearForm,
   } = useUpdateProfile();
   return (
     <Dialog.Root size={'xs'}>
@@ -43,7 +51,8 @@ export const UpdateProfileButton = () => {
           size="xs"
           flexBasis={'20'}
           colorPalette={'green'}
-          _hover={{ color: 'black' }}
+          border={'1px solid'}
+          _hover={{ color: 'white', bg: 'brand.solid' }}
           rounded={'4xl'}
           justifySelf={'flex-end'}
         >
@@ -67,6 +76,7 @@ export const UpdateProfileButton = () => {
                   color={'white'}
                   border={'1px solid white'}
                   rounded={'full'}
+                  onClick={clearForm}
                 />
               </Dialog.CloseTrigger>
             </Dialog.Header>
@@ -77,15 +87,38 @@ export const UpdateProfileButton = () => {
                     position="relative"
                     h={'12vh'}
                     w={'full'}
-                    bg={'white'}
-                    bgImage={user?.profile.bannerUrl || ''}
                     alignSelf={'center'}
                     rounded={'lg'}
                   >
+                    <Box maxH={'200px'}>
+                      <Image
+                        objectFit={'cover'}
+                        maxH={'80px'}
+                        w={'full'}
+                        rounded={'lg'}
+                        src={previewBanner ?? user?.profile.bannerUrl ?? ''}
+                      />
+                    </Box>
+                    <Float placement={'middle-center'}>
+                      <Button
+                        size={'xs'}
+                        variant={'ghost'}
+                        onClick={handleBannerAddClick}
+                        _hover={{ bg: 'initial' }}
+                      >
+                        <Image
+                          maxW={'300%'}
+                          src={galleryAddLogo}
+                          bg={'bgSite.solid'}
+                          rounded={'full'}
+                          p={'0.5'}
+                        />
+                      </Button>
+                    </Float>
                     <Float placement={'bottom-start'} offsetX="10">
                       <Avatar
-                        name={user?.profile?.fullName || ''}
-                        src={user?.profile?.avatarUrl}
+                        name={user?.profile?.fullName ?? ''}
+                        src={previewURL ?? user?.profile?.avatarUrl ?? ''}
                         size={'2xl'}
                       />
                       <Float placement={'middle-center'}>
@@ -140,6 +173,19 @@ export const UpdateProfileButton = () => {
                       inputFileRef.current = e;
                     }}
                   />
+                  <Input
+                    type={'file'}
+                    hidden
+                    {...restRegisterBanner}
+                    onChange={(e) => {
+                      handleBannerPreview(e);
+                      registerBannerOnChange(e);
+                    }}
+                    ref={(e) => {
+                      registerBannerref(e);
+                      inputBannerRef.current = e;
+                    }}
+                  />
                   <Field.Root invalid={!!errors['username']?.message} required>
                     <Box pos="relative" w="full">
                       <Input
@@ -176,15 +222,6 @@ export const UpdateProfileButton = () => {
                     </Box>
                     <FieldErrorText>{errors.bio?.message}</FieldErrorText>
                   </Field.Root>
-                  <Box w={'full'} display={'flex'} justifyContent={'start'}>
-                    <Image
-                      rounded={'3xl'}
-                      objectFit={'contain'}
-                      maxHeight={'200px'}
-                      maxWidth={'100%'}
-                      src={previewURL ?? ''}
-                    />
-                  </Box>
                 </Flex>
                 <Flex justifyContent={'flex-end'} mt={'2'}>
                   <Button

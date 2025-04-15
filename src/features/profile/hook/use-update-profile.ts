@@ -24,6 +24,8 @@ export default function useUpdateProfile() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const inputBannerRef = useRef<HTMLInputElement | null>(null);
+  const [previewBanner, setPreviewBanner] = useState<string | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
   const {
     register,
@@ -44,6 +46,11 @@ export default function useUpdateProfile() {
     onChange: registerImagesOnChange,
     ...restRegisterImages
   } = register('avatarUrl');
+  const {
+    ref: registerBannerref,
+    onChange: registerBannerOnChange,
+    ...restRegisterBanner
+  } = register('bannerUrl');
   // const navigate = useNavigate();
   const { isPending, mutateAsync: mutateUpdateProfile } = useMutation<
     UpdateResponse,
@@ -52,17 +59,20 @@ export default function useUpdateProfile() {
   >({
     mutationKey: ['update-profile'],
     mutationFn: async (data: ProfileUpdateSchemaDTO) => {
-      // const { username, ...rest } = data;
-      // const lowercaseUsername = username.toLowerCase();
       const formData = new FormData();
       formData.append('fullName', data.fullName);
       formData.append('username', data.username.toLowerCase());
       formData.append('bio', data.bio);
       if (data.avatarUrl) {
-        formData.append('avatarUrl', data.avatarUrl[0]); // Access the first file in the array
+        formData.append('avatarUrl', user?.profile.avatarUrl ?? ''); // Access the first file in the array
       }
+      if (data.bannerUrl) {
+        formData.append('bannerUrl', user?.profile.bannerUrl ?? '');
+      }
+
       // const registerData = { username: lowercaseUsername, ...rest };
       // console.log('username', lowercaseUsername);
+      console.log('formData', formData);
       const response = await api.post<UpdateResponse>('/profile', formData);
       return response.data;
     },
@@ -100,12 +110,12 @@ export default function useUpdateProfile() {
   });
   const onSubmit = async (data: ProfileUpdateSchemaDTO) => {
     await mutateUpdateProfile(data);
-
-    console.log(data, 'this is data');
-    console.log('avatar', data.avatarUrl);
   };
   const handleGalleryAddClick = () => {
     inputFileRef.current?.click();
+  };
+  const handleBannerAddClick = () => {
+    inputBannerRef.current?.click();
   };
   function handlePreview(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
@@ -114,13 +124,23 @@ export default function useUpdateProfile() {
       setPreviewURL(url);
     }
   }
+  function handleBannerPreview(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const url = URL.createObjectURL(file);
+      console.log('urlbanner', url);
+      setPreviewBanner(url);
+    }
+  }
   function clearForm() {
     reset();
     setPreviewURL('');
+    setPreviewBanner('');
   }
   return {
     register,
     previewURL,
+    previewBanner,
     handleSubmit,
     errors,
     onSubmit,
@@ -131,5 +151,12 @@ export default function useUpdateProfile() {
     restRegisterImages,
     registerImagesOnChange,
     inputFileRef,
+    handleBannerPreview,
+    handleBannerAddClick,
+    registerBannerref,
+    restRegisterBanner,
+    registerBannerOnChange,
+    inputBannerRef,
+    clearForm,
   };
 }

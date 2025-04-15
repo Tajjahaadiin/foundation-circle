@@ -28,14 +28,13 @@ export default function ProfileThread() {
           <Spinner />
         </Box>
       ) : (
-        <Flex flexDir={'column'}>
+        <Flex flexDir={'column'} mt={'2'}>
           {threads?.map((thread) => (
             <Box
-              my={'4'}
               // borderBottom={'solid'}
               borderColor={'bdr'}
               borderWidth={'1px'}
-              borderBlockEnd={'1px solid'}
+              // borderBlockEnd={'1px solid'}
             >
               <CardThread thread={thread} key={thread.id} />
             </Box>

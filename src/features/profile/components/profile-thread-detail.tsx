@@ -28,9 +28,11 @@ export default function ProfileThreadDetail() {
           <Spinner />
         </Box>
       ) : (
-        <Flex flexDir={'column'}>
+        <Flex flexDir={'column'} mt={'2'}>
           {threads?.map((thread) => (
-            <CardThread thread={thread} key={thread.id} />
+            <Box borderWidth={'1px'} borderColor={'bdr'}>
+              <CardThread thread={thread} key={thread.id} />
+            </Box>
           ))}
         </Flex>
       )}

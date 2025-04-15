@@ -113,19 +113,19 @@ export default function Applayout() {
   //   );
   // }
   return (
-    <Grid templateColumns={'repeat(4,1fr)'}>
+    <Grid templateColumns={'repeat(9,1fr)'}>
       <GridItem colSpan={1}>
         <SidebarLeft />
       </GridItem>
       <GridItem
         minHeight={'dvh'}
-        colSpan={{ base: 4, lg: 2 }}
+        colSpan={{ base: 4, lg: 5 }}
         borderX={'1px solid'}
         borderColor={'bdr'}
       >
         <Outlet />
       </GridItem>
-      <GridItem colSpan={1}>
+      <GridItem colSpan={3}>
         <SidebarRight />
       </GridItem>
     </Grid>
@@ -210,8 +210,8 @@ export function SidebarRight() {
   // console.log('userData', user);
   return (
     <Grid
-      templateRows={'repeat(7,82px)'}
-      h={'dvh'}
+      templateRows={'repeat(10,90px)'}
+      h={'full'}
       position={'sticky'}
       top={'0'}
       spaceY={'5'}
@@ -226,16 +226,24 @@ export function SidebarRight() {
       >
         <Flex flexDir={'column'} h={'full'}>
           <Text color={'white'}>My Profile</Text>
-          <Flex flexDir={'column'}>
+          <Flex flexDir={'column'} mt={'2'}>
             <Box
               position="relative"
               h={'12vh'}
               w={'full'}
               bg={'white'}
-              bgImage={user?.profile.bannerUrl || ''}
+              // bgImage={user?.profile.bannerUrl || ''}
               alignSelf={'center'}
               rounded={'lg'}
             >
+              <Flex w={'full'} maxH={'70px'} rounded={'lg'}>
+                <Image
+                  src={user?.profile.bannerUrl ?? ''}
+                  rounded={'lg'}
+                  objectFit={'cover'}
+                  objectPosition={'center'}
+                />
+              </Flex>
               <Float placement={'bottom-start'} offsetX="10">
                 <Avatar
                   name={user?.profile?.fullName || ''}
@@ -281,7 +289,7 @@ export function SidebarRight() {
           </Flex>
         </Flex>
       </GridItem>
-      <GridItem rowSpan={3} bg={'card'} rounded={'l3'} p={'1.5vh'}>
+      <GridItem rowSpan={4} bg={'card'} rounded={'l3'} p={'1.5vh'}>
         <Text my={'0.5vh'} textStyle={'sm'} color={'white'}>
           Suggested For you
         </Text>

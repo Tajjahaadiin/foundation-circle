@@ -63,7 +63,7 @@ export function useUpdateThread(
     onError: (error) => {
       if (isAxiosError(error)) {
         return toaster.create({
-          title: error.response?.data.message,
+          title: error.response?.data.errors[0].message,
           type: 'error',
         });
       }

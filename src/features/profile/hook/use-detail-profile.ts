@@ -9,7 +9,7 @@ export default function UseDetailProfile() {
     queryKey: [`users/${userId}`],
     queryFn: async () => {
       const response = await api.get(`users/${userId}`);
-      return response.data;
+      return response.data.user;
     },
   });
   console.log('data', data);
@@ -18,12 +18,16 @@ export default function UseDetailProfile() {
   const avatarUrl = data?.profile.avatarUrl || '';
   const bannerUrl = data?.profile.bannerUrl || '';
   const bio = data?.profile.bio || '';
+  const followersCount = data?.followersCount || 0;
+  const followingCount = data?.followingCount || 0;
   return {
     fullName,
     username,
     bannerUrl,
     avatarUrl,
     bio,
+    followersCount,
+    followingCount,
     isLoading,
   };
 }
