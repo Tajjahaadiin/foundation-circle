@@ -1,0 +1,1 @@
+import{a,o as r}from"./chunk-IR6S3I6Y-DmKRdMYR.js";function l(o){const{when:n,fallback:s,children:t}=o;let e;return n?e=typeof t=="function"?t(n):t:e=s,a.isValidElement(e)?e:r.jsx(r.Fragment,{children:e})}export{l as S};

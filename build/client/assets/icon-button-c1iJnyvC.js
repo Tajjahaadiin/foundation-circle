@@ -1,0 +1,1 @@
+import{a as n,o as r}from"./chunk-IR6S3I6Y-DmKRdMYR.js";import{B as s}from"./QueryClientProvider-Y79vg6s4.js";const c=n.forwardRef(function(o,t){return r.jsx(s,{px:"0",py:"0",_icon:{fontSize:"1.2em"},ref:t,...o})});export{c as I};

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "tsc -b && vite build",
+    "generate-html": "mkdir -p dist && cp index.html dist/",
     "preview": "vite preview",
     "lint": "eslint --fix .",
     "format": "prettier --write .",

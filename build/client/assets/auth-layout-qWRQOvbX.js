@@ -1,0 +1,1 @@
+import{w as o}from"./with-props-BMy_yGDR.js";import{o as t,N as a,O as r}from"./chunk-IR6S3I6Y-DmKRdMYR.js";import{a as s}from"./js.cookie-Cz0CWeBA.js";const p=o(function(){return s.get("token")?t.jsx(a,{to:"/"}):t.jsx(r,{})});export{p as default};
